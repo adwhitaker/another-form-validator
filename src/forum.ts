@@ -1,3 +1,5 @@
+import { Validator } from "./validators";
+
 interface FieldOptions {
     name: string
     touched: boolean
@@ -7,10 +9,10 @@ interface FieldOptions {
 }
 
 type OnChangeCallback = (field: FieldOptions) => void;
-type Validator = (value: any) => boolean;
 
 type Field = {
     name: string
+    model: () => any
     touched: boolean
     dirty: boolean
     valid: boolean
@@ -21,6 +23,7 @@ type Field = {
 
 interface FieldRegister {
     name: string
+    model: () => any
     validators: Validator[]
     onChange: OnChangeCallback[]
 }
@@ -37,41 +40,45 @@ interface Forum {
 
     reset(): void
 
-    registerValidator(): void
+    registerValidator(fieldName: string, validator: Validator): void
 
-    validate(): FieldOptions
+    validate(): boolean
 
-    validateField(fieldName: string, value: any): FieldOptions
+    validateField(fieldName: string): boolean
 
     onChange(field: string, callback: OnChangeCallback): void;
 }
 
+type FieldObject = { [key: string]: Field }
+
 class Forum implements Forum {
 
-    private fields: Field[];
+    private fields: FieldObject = {};
 
     constructor(fields: FieldRegister[] = []) {
-        this.fields = fields.map((field: FieldRegister) => this.formatField(field));
+        fields.forEach(field => {
+            this.fields[field.name] = this.formatField(field)
+        });
     }
 
     public onChange(fieldName: string, callback: OnChangeCallback): void {
-        let field = this.findField(fieldName);
+        let field: Field = this.fields[fieldName];
         if (field) {
             field.onChange.push(callback);
         }
     }
 
     public registerField(field: Field): void {
-        const newField = this.formatField(field);
-        this.fields.push(newField);
+        this.fields[field.name] = this.formatField(field)
     }
 
     public unregisterField(fieldName: string): void {
-
+        delete this.fields[fieldName];
     }
 
     public touchAll(): void {
-        this.fields.forEach((field: Field) => {
+        Object.keys(this.fields).forEach((key: string) => {
+            let field: Field = this.fields[key];
             field.touched = true;
 
             field.onChange.forEach((callback: OnChangeCallback) => {
@@ -82,7 +89,7 @@ class Forum implements Forum {
     }
 
     public touchField(fieldName: string): void {
-        const field = this.findField(fieldName);
+        const field: Field = this.fields[fieldName];
         if (field) {
             field.touched = true;
 
@@ -91,46 +98,66 @@ class Forum implements Forum {
                 callback(params);
             });
         }
-
     }
 
     public reset(): void {
-
+        Object.keys(this.fields)
+            .forEach((key: string) => {
+                let field: Field = this.fields[key];
+                if (field) {
+                    field.touched = false;
+                    field.dirty = false;
+                    field.valid = false;
+                }
+            });
     }
 
-    public registerValidator(): void {
-
+    public registerValidator(fieldName: string, validator: Validator): void {
+        let field: Field = this.fields[fieldName];
+        if (field) {
+            field.validators.push(validator)
+        }
     }
 
-    public validate(): FieldOptions {
-        return undefined;
+    public validate(): boolean {
+        let isValid: boolean = true;
+
+        Object.keys(this.fields)
+            .forEach((key: string) => {
+                const fieldIsValid: boolean = this.validateField(key);
+                if (!fieldIsValid) {
+                    isValid = false;
+                }
+            });
+
+        return isValid;
     }
 
-    public validateField(fieldName: string, value: any): FieldOptions {
+    public validateField(fieldName: string): boolean {
         let valid: boolean = true;
-        const field: Field | null = this.findField(fieldName);
+        let errors: string[] = [];
+        const field: Field | null = this.fields[fieldName];
 
         if (field) {
             field.validators.forEach(validator => {
-                const isValid: boolean = validator(value);
+                const isValid: boolean = validator.validate(field.model());
+
                 if (!isValid) {
                     valid = false;
+                    errors.push(validator.getError())
                 }
             });
 
             field.valid = valid;
+            field.errors = errors;
 
             field.onChange.forEach((callback: OnChangeCallback) => {
                 const params: FieldOptions = this.formatCallbackParams(field);
                 callback(params);
             });
 
-            return field;
+            return field.valid;
         }
-    }
-
-    private findField(fieldName: string): Field | null {
-        return this.fields.find((field: Field) => field.name === fieldName);
     }
 
     private formatCallbackParams(field: Field): FieldOptions {
@@ -146,6 +173,7 @@ class Forum implements Forum {
     private formatField(field: FieldRegister): Field {
         const defaultField: Field = {
             name: '',
+            model: () => null,
             touched: false,
             dirty: false,
             valid: false,
@@ -159,33 +187,5 @@ class Forum implements Forum {
 }
 
 
-const forum = new Forum([
-    {
-        name: 'pineapple',
-        validators: [
-            (value) => true
-        ],
-        onChange: [
-            (field) => console.log(`field pineapple changed: is touched ${ field.touched }`)
-        ]
-    },
-    {
-        name: 'orange',
-        validators: [
-            (value) => value > 1
-        ],
-        onChange: [
-            (field) => console.log(`field orange changed: is touched ${ field.touched }`)
-        ]
-    }
-]);
+export default Forum
 
-forum.touchField('pineapple');
-
-forum.onChange('orange', (field) => {
-    console.log(`orange is valid: ${ field.valid }`);
-});
-
-forum.validateField('orange', 2);
-
-export default Forum;
