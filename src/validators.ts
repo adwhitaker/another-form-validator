@@ -1,10 +1,10 @@
 export type Validator = {
-    getError: () => string
+    getError: (value: any) => string
     validate: (value: any) => boolean
 }
 
 export const required: Validator = {
-    getError: () => {
+    getError: (value: any) => {
         return 'This field is required.';
     },
     validate: (value: any) => {

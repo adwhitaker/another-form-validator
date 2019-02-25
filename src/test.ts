@@ -12,7 +12,7 @@ const greaterThanOne: Validator = {
     validate: (value) => value > 1
 };
 
-const forum = new Forum([
+const form: Forum = new Forum([
     {
         name: 'pineapple',
         model: () => model.pineapple,
@@ -33,15 +33,15 @@ const forum = new Forum([
     }
 ]);
 
-forum.touchField('pineapple');
+form.touchField('pineapple');
 
-forum.onChange('orange', (field) => {
+form.onChange('orange', (field) => {
     console.log(`orange is valid: ${field.valid}, error: ${field.errors}`);
 });
 
-forum.validateField('orange');
+form.validateField('orange');
 
 model.orange = 1;
 
-forum.validate();
+form.validate();
 

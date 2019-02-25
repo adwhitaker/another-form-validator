@@ -144,7 +144,7 @@ class Forum implements Forum {
 
                 if (!isValid) {
                     valid = false;
-                    errors.push(validator.getError())
+                    errors.push(validator.getError(field.model()))
                 }
             });
 
