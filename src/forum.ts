@@ -158,4 +158,10 @@ const forum = new Forum([
 
 forum.touchField('pineapple');
 
+forum.onChange('pineapple', (field) => {
+    console.log(`New registered on change event`);
+});
+
+forum.touchAll();
+
 export default Forum;
