@@ -72,9 +72,10 @@ class Forum implements Forum {
     public touchAll(): void {
         this.fields.forEach((field: Field) => {
             field.touched = true;
-            field.onChange.forEach(onChange => {
+
+            field.onChange.forEach((callback: OnChangeCallback) => {
                 const params: FieldOptions = this.formatCallbackParams(field);
-                onChange(params);
+                callback(params);
             });
         });
     }
@@ -83,7 +84,8 @@ class Forum implements Forum {
         const field = this.findField(fieldName);
         if (field) {
             field.touched = true;
-            field.onChange.forEach(callback => {
+
+            field.onChange.forEach((callback: OnChangeCallback) => {
                 const params: FieldOptions = this.formatCallbackParams(field);
                 callback(params);
             });
