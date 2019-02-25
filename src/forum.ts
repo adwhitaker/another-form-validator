@@ -49,11 +49,11 @@ class Forum implements Forum {
 
     private fields: Field[];
 
-    constructor(fields: Array<FieldRegister> = []) {
+    constructor(fields: FieldRegister[] = []) {
         this.fields = fields.map((field: FieldRegister) => this.formatField(field));
     }
 
-    public onChange(fieldName: string, callback: OnChangeCallback) {
+    public onChange(fieldName: string, callback: OnChangeCallback): void {
         let field = this.findField(fieldName);
         if (field) {
             field.onChange.push(callback);
@@ -121,7 +121,7 @@ class Forum implements Forum {
         };
     }
 
-    private formatField(field: FieldRegister) {
+    private formatField(field: FieldRegister): Field {
         const defaultField: Field = {
             name: '',
             touched: false,
