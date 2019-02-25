@@ -173,7 +173,6 @@ const forum = new Forum([
         name: 'orange',
         validators: [
             (value) => value > 1
-
         ],
         onChange: [
             (field) => console.log(`field orange changed: is touched ${ field.touched }`)
@@ -184,7 +183,7 @@ const forum = new Forum([
 forum.touchField('pineapple');
 
 forum.onChange('orange', (field) => {
-    console.log(`pineapple is valid: ${ field.valid }`);
+    console.log(`orange is valid: ${ field.valid }`);
 });
 
 forum.validateField('orange', 2);
