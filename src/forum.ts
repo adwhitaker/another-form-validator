@@ -7,26 +7,27 @@ interface FieldOptions {
 }
 
 type OnChangeCallback = (field: FieldOptions) => void;
+type Validator = (value: any) => boolean;
 
 type Field = {
     name: string
     touched: boolean
     dirty: boolean
     valid: boolean
-    validators: string[]
+    validators: Validator[]
     errors: string[]
     onChange: OnChangeCallback[]
 }
 
 interface FieldRegister {
     name: string
-    validators: string[]
+    validators: Validator[]
     onChange: OnChangeCallback[]
 }
 
 
 interface Forum {
-    registerField(field: Field): void
+    registerField(field: FieldRegister): void
 
     unregisterField(fieldName: string): void
 
@@ -40,7 +41,7 @@ interface Forum {
 
     validate(): FieldOptions
 
-    validateField(fieldName: string): FieldOptions
+    validateField(fieldName: string, value: any): FieldOptions
 
     onChange(field: string, callback: OnChangeCallback): void;
 }
@@ -60,7 +61,7 @@ class Forum implements Forum {
         }
     }
 
-    public registerField(field: FieldRegister): void {
+    public registerField(field: Field): void {
         const newField = this.formatField(field);
         this.fields.push(newField);
     }
@@ -105,8 +106,27 @@ class Forum implements Forum {
         return undefined;
     }
 
-    public validateField(fieldName: string): FieldOptions {
-        return undefined;
+    public validateField(fieldName: string, value: any): FieldOptions {
+        let valid: boolean = true;
+        const field: Field | null = this.findField(fieldName);
+
+        if (field) {
+            field.validators.forEach(validator => {
+                const isValid: boolean = validator(value);
+                if (!isValid) {
+                    valid = false;
+                }
+            });
+
+            field.valid = valid;
+
+            field.onChange.forEach((callback: OnChangeCallback) => {
+                const params: FieldOptions = this.formatCallbackParams(field);
+                callback(params);
+            });
+
+            return field;
+        }
     }
 
     private findField(fieldName: string): Field | null {
@@ -142,14 +162,19 @@ class Forum implements Forum {
 const forum = new Forum([
     {
         name: 'pineapple',
-        validators: ['required'],
+        validators: [
+            (value) => true
+        ],
         onChange: [
             (field) => console.log(`field pineapple changed: is touched ${ field.touched }`)
         ]
     },
     {
         name: 'orange',
-        validators: ['required'],
+        validators: [
+            (value) => value > 1
+
+        ],
         onChange: [
             (field) => console.log(`field orange changed: is touched ${ field.touched }`)
         ]
@@ -158,10 +183,10 @@ const forum = new Forum([
 
 forum.touchField('pineapple');
 
-forum.onChange('pineapple', (field) => {
-    console.log(`New registered on change event`);
+forum.onChange('orange', (field) => {
+    console.log(`pineapple is valid: ${ field.valid }`);
 });
 
-forum.touchAll();
+forum.validateField('orange', 2);
 
 export default Forum;
