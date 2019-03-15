@@ -2,8 +2,8 @@
   "name": "forum",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/bundle.js",
-  "module": "dist/bundle.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "scripts": {
     "compile": "tsc",
     "webpack": "webpack --mode development",
