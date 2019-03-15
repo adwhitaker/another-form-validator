@@ -1,12 +1,15 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/forum.ts',
+    entry: {
+        'forum': './src/index.ts',
+    },
     output: {
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
-        filename: 'forum.js',
+        libraryTarget: 'umd',
         library: 'forum',
-        libraryTarget: 'umd'
+        umdNamedDefine: true
     },
     module: {
         rules: [
@@ -18,7 +21,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: [ '.tsx', '.ts', '.js' ]
+        extensions: ['.tsx', '.ts', '.js']
     },
     output: {
         filename: 'bundle.js',

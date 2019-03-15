@@ -1,6 +1,6 @@
 import { required, Validator } from "./validators";
 
-import Forum from './forum'
+import Forum from '.'
 
 let model = {
     pineapple: false,

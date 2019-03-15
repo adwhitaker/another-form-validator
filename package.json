@@ -2,8 +2,8 @@
   "name": "forum",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/forum.js",
-  "module": "dist/forum.js",
+  "main": "dist/bundle.js",
+  "module": "dist/bundle.js",
   "scripts": {
     "webpack": "webpack --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
