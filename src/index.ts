@@ -29,7 +29,7 @@ interface FieldRegister {
 }
 
 
-interface Forum {
+interface IForum {
     registerField(field: FieldRegister): void
 
     unregisterField(fieldName: string): void
@@ -53,7 +53,7 @@ interface Forum {
 
 type FieldObject = { [key: string]: Field }
 
-class Forum implements Forum {
+export default class Forum implements IForum {
 
     private fields: FieldObject = {};
 
@@ -213,7 +213,3 @@ class Forum implements Forum {
         this.validitySubscribers.forEach(callback => callback(this.isValid))
     }
 }
-
-
-export default Forum
-

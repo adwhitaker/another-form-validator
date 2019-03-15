@@ -5,6 +5,7 @@
   "main": "dist/bundle.js",
   "module": "dist/bundle.js",
   "scripts": {
+    "compile": "tsc",
     "webpack": "webpack --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

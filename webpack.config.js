@@ -1,30 +1,45 @@
+// const DeclarationBundlerPlugin = require('./declaration-bundler-webpack-plugin.fix');
 const path = require('path');
+const DIST = path.resolve(__dirname, 'dist');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-    entry: {
-        'forum': './src/index.ts',
-    },
-    output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist'),
-        libraryTarget: 'umd',
-        library: 'forum',
-        umdNamedDefine: true
-    },
-    module: {
-        rules: [
-            {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/
-            }
-        ]
-    },
-    resolve: {
-        extensions: ['.tsx', '.ts', '.js']
-    },
-    output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist')
-    }
+  mode: 'production',
+  entry: {
+    starter: path.resolve(__dirname, './src/index.ts'),
+  },
+  output: {
+    path: DIST,
+    libraryTarget: 'commonjs',
+    filename: 'index.js',
+  },
+  resolve: { extensions: ['.ts'] },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        exclude: [/node_modules/],
+        loader: 'ts-loader',
+      },
+    ],
+  },
+  devtool: 'source-map',
+  plugins: [
+    // new CleanWebpackPlugin(['./@types', './dist']),
+    // new DeclarationBundlerPlugin({
+    //   moduleName: '"@forum"',
+    //   out: '../@types/index.d.ts',
+    // }),
+    // new CopyWebpackPlugin([
+    //   {
+    //     from: './types/package.json',
+    //     to: '../@types/package.json',
+    //   },
+    //   {
+    //     from: './src/package.json',
+    //     to: '../dist/package.json',
+    //   },
+    // ]),
+  ],
 };
