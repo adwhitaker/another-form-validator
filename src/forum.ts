@@ -1,4 +1,4 @@
-import { Validator } from "./validators";
+import {Validator} from "./validators";
 
 interface FieldOptions {
     name: string
@@ -34,9 +34,11 @@ interface Forum {
 
     unregisterField(fieldName: string): void
 
+    dirty(fieldName: string): void
+
     touchAll(): void
 
-    touchField(fieldName: string): void
+    touch(fieldName: string): void
 
     reset(): void
 
@@ -54,6 +56,10 @@ type FieldObject = { [key: string]: Field }
 class Forum implements Forum {
 
     private fields: FieldObject = {};
+
+    private isValid: boolean = false;
+
+    private validitySubscribers: Array<(isValid: boolean) => void> = [];
 
     constructor(fields: FieldRegister[] = []) {
         fields.forEach(field => {
@@ -76,6 +82,18 @@ class Forum implements Forum {
         delete this.fields[fieldName];
     }
 
+    public dirty(fieldName: string): void {
+        let field: Field = this.fields[fieldName];
+        if (field) {
+            field.dirty = true;
+
+            field.onChange.forEach((callback: OnChangeCallback) => {
+                const params: FieldOptions = this.formatCallbackParams(field);
+                callback(params);
+            });
+        }
+    }
+
     public touchAll(): void {
         Object.keys(this.fields).forEach((key: string) => {
             let field: Field = this.fields[key];
@@ -88,7 +106,7 @@ class Forum implements Forum {
         });
     }
 
-    public touchField(fieldName: string): void {
+    public touch(fieldName: string): void {
         const field: Field = this.fields[fieldName];
         if (field) {
             field.touched = true;
@@ -130,6 +148,7 @@ class Forum implements Forum {
                 }
             });
 
+        this.updateFormValidity(isValid);
         return isValid;
     }
 
@@ -160,6 +179,10 @@ class Forum implements Forum {
         }
     }
 
+    public validitySubscriber(callback: (isValid: boolean) => void) {
+        this.validitySubscribers.push(callback)
+    }
+
     private formatCallbackParams(field: Field): FieldOptions {
         return {
             name: field.name,
@@ -183,6 +206,11 @@ class Forum implements Forum {
         };
 
         return Object.assign({}, defaultField, field);
+    }
+
+    private updateFormValidity(valid: boolean): void {
+        this.isValid = valid
+        this.validitySubscribers.forEach(callback => callback(this.isValid))
     }
 }
 

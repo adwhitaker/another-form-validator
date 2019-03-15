@@ -33,15 +33,24 @@ const form: Forum = new Forum([
     }
 ]);
 
-form.touchField('pineapple');
+form.validitySubscriber((isValid) => {
+    console.log('subscriber: Form is valid:', isValid, 'enabled submit?', isValid);
+});
+
+form.touch('pineapple');
 
 form.onChange('orange', (field) => {
-    console.log(`orange is valid: ${field.valid}, error: ${field.errors}`);
+    if (field.dirty && !field.valid) {
+        console.log('orange is invalid, display error message')
+    }
 });
 
 form.validateField('orange');
 
 model.orange = 1;
+form.dirty('orange');
 
 form.validate();
 
+model.orange = 4;
+form.validate();

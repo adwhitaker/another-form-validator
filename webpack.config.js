@@ -2,6 +2,12 @@ const path = require('path');
 
 module.exports = {
     entry: './src/forum.ts',
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'forum.js',
+        library: 'forum',
+        libraryTarget: 'umd'
+    },
     module: {
         rules: [
             {
