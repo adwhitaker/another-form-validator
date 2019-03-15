@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "main": "dist/forum.js",
-  "module": "src/forum.ts",
+  "module": "dist/forum.js",
   "scripts": {
     "webpack": "webpack --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
