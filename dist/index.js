@@ -24,14 +24,10 @@ var Forum = /** @class */ (function () {
         delete this.fields[fieldName];
     };
     Forum.prototype.dirty = function (fieldName) {
-        var _this = this;
         var field = this.fields[fieldName];
         if (field) {
             field.dirty = true;
-            field.onChange.forEach(function (callback) {
-                var params = _this.formatCallbackParams(field);
-                callback(params);
-            });
+            this.validateField(fieldName);
         }
     };
     Forum.prototype.touchAll = function () {
@@ -46,14 +42,10 @@ var Forum = /** @class */ (function () {
         });
     };
     Forum.prototype.touch = function (fieldName) {
-        var _this = this;
         var field = this.fields[fieldName];
         if (field) {
             field.touched = true;
-            field.onChange.forEach(function (callback) {
-                var params = _this.formatCallbackParams(field);
-                callback(params);
-            });
+            this.validateField(fieldName);
         }
     };
     Forum.prototype.reset = function () {

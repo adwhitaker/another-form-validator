@@ -86,11 +86,7 @@ export default class Forum implements IForum {
         let field: Field = this.fields[fieldName];
         if (field) {
             field.dirty = true;
-
-            field.onChange.forEach((callback: OnChangeCallback) => {
-                const params: FieldOptions = this.formatCallbackParams(field);
-                callback(params);
-            });
+            this.validateField(fieldName)
         }
     }
 
@@ -110,11 +106,7 @@ export default class Forum implements IForum {
         const field: Field = this.fields[fieldName];
         if (field) {
             field.touched = true;
-
-            field.onChange.forEach((callback: OnChangeCallback) => {
-                const params: FieldOptions = this.formatCallbackParams(field);
-                callback(params);
-            });
+            this.validateField(fieldName)
         }
     }
 
