@@ -170,18 +170,16 @@ export default class Forum {
     }
 
     private formatField(field: FieldRegister): Field {
-        const defaultField: Field = {
-            name: '',
-            model: () => null,
+        return {
+            name: field.name,
+            model: field.model,
             touched: false,
             dirty: false,
             valid: true,
             errors: [],
-            validators: [],
-            onChange: []
+            validators: field.validators,
+            onChange: field.onChange
         }
-
-        return Object.assign({}, defaultField, field)
     }
 
     private updateFormValidity(valid: boolean): void {
