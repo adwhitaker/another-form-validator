@@ -1,4 +1,4 @@
-import Forum, { FieldRegister } from '../src/index'
+import Forum, { FieldRegister } from '../src/forum'
 import { Validator } from '../src/validators';
 
 describe('Forum', () => {

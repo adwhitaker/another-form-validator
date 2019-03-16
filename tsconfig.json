@@ -29,7 +29,6 @@
       "./exec.ts"
     ],
     "include": [
-      "./**/*.ts",
-      "./index.d.ts"
+      "./src/index.ts",
     ]
   }
