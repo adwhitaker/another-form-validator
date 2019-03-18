@@ -127,7 +127,7 @@ describe('Forum', () => {
         }))
     })
 
-    test('dirtyAll Fields updates dirty for each field', () => {
+    test('dirtyAll fields updates dirty for each field', () => {
         const forum: Forum = factory([
             {
                 name: 'pineapple',
@@ -160,4 +160,36 @@ describe('Forum', () => {
         expect(orange.dirty).toBeTruthy()
     })
 
+    test('touchAll fields updates touched for each field', () => {
+        const forum: Forum = factory([
+            {
+                name: 'pineapple',
+                model: () => model.pineapple,
+                validators: [],
+                onChange: []
+            },
+            {
+                name: 'apple',
+                model: () => model.apple,
+                validators: [],
+                onChange: []
+            },
+            {
+                name: 'orange',
+                model: () => model.orange,
+                validators: [],
+                onChange: []
+            }
+        ])
+
+        forum.touchAll()
+
+        const pineapple = forum.getFieldState('pineapple')
+        const apple = forum.getFieldState('apple')
+        const orange = forum.getFieldState('orange')
+
+        expect(pineapple.touched).toBeTruthy()
+        expect(apple.touched).toBeTruthy()
+        expect(orange.touched).toBeTruthy()
+    })
 })
