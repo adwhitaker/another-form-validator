@@ -74,6 +74,18 @@ export default class Forum {
         }
     }
 
+    public dirtyAll(fieldName: string): void {
+        Object.keys(this.fields).forEach((key: string) => {
+            let field: Field = this.fields[key]
+            field.dirty = true
+
+            field.onChange.forEach((callback: OnChangeCallback) => {
+                const params: FieldOptions = this.formatCallbackParams(field)
+                callback(params)
+            })
+        })
+    }
+
     public touchAll(): void {
         Object.keys(this.fields).forEach((key: string) => {
             let field: Field = this.fields[key]
