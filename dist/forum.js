@@ -36,6 +36,17 @@ var Forum = /** @class */ (function () {
             this.validateField(fieldName);
         }
     };
+    Forum.prototype.dirtyAll = function () {
+        var _this = this;
+        Object.keys(this.fields).forEach(function (key) {
+            var field = _this.fields[key];
+            field.dirty = true;
+            field.onChange.forEach(function (callback) {
+                var params = _this.formatCallbackParams(field);
+                callback(params);
+            });
+        });
+    };
     Forum.prototype.touchAll = function () {
         var _this = this;
         Object.keys(this.fields).forEach(function (key) {
@@ -120,17 +131,16 @@ var Forum = /** @class */ (function () {
         };
     };
     Forum.prototype.formatField = function (field) {
-        var defaultField = {
-            name: '',
-            model: function () { return null; },
+        return {
+            name: field.name,
+            model: field.model,
             touched: false,
             dirty: false,
             valid: true,
             errors: [],
-            validators: [],
-            onChange: []
+            validators: field.validators,
+            onChange: field.onChange
         };
-        return Object.assign({}, defaultField, field);
     };
     Forum.prototype.updateFormValidity = function (valid) {
         var _this = this;

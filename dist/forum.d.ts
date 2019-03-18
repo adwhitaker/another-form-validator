@@ -33,6 +33,7 @@ export default class Forum {
     registerField(field: FieldRegister): void;
     unregisterField(fieldName: string): void;
     dirty(fieldName: string): void;
+    dirtyAll(): void;
     touchAll(): void;
     touch(fieldName: string): void;
     reset(): void;

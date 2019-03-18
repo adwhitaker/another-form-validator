@@ -74,6 +74,18 @@ export default class Forum {
         }
     }
 
+    public dirtyAll(): void {
+        Object.keys(this.fields).forEach((key: string) => {
+            let field: Field = this.fields[key]
+            field.dirty = true
+
+            field.onChange.forEach((callback: OnChangeCallback) => {
+                const params: FieldOptions = this.formatCallbackParams(field)
+                callback(params)
+            })
+        })
+    }
+
     public touchAll(): void {
         Object.keys(this.fields).forEach((key: string) => {
             let field: Field = this.fields[key]
@@ -170,18 +182,16 @@ export default class Forum {
     }
 
     private formatField(field: FieldRegister): Field {
-        const defaultField: Field = {
-            name: '',
-            model: () => null,
+        return {
+            name: field.name,
+            model: field.model,
             touched: false,
             dirty: false,
             valid: true,
             errors: [],
-            validators: [],
-            onChange: []
+            validators: field.validators,
+            onChange: field.onChange
         }
-
-        return Object.assign({}, defaultField, field)
     }
 
     private updateFormValidity(valid: boolean): void {
