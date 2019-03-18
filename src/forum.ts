@@ -74,7 +74,7 @@ export default class Forum {
         }
     }
 
-    public dirtyAll(fieldName: string): void {
+    public dirtyAll(): void {
         Object.keys(this.fields).forEach((key: string) => {
             let field: Field = this.fields[key]
             field.dirty = true
