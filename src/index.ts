@@ -1,7 +1,7 @@
-import Forum, { Field, FieldOptions, FieldRegister } from './forum'
+import FormValidator, { Field, FieldOptions, FieldRegister } from './FormValidator'
 import { Validator } from './validators'
 
-export default Forum
+export default FormValidator
 
 export {
     Field,

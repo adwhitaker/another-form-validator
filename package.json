@@ -1,19 +1,27 @@
 {
-  "name": "forum",
-  "version": "0.1.4",
-  "description": "A framework agnostic, customizable form validator",
-  "main": "dist/index.js",
-  "scripts": {
-    "compile": "tsc",
-    "test": "jest"
-  },
-  "author": "Alexander Whitaker",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/jest": "^24.0.11",
-    "jest": "^24.5.0",
-    "ts-jest": "^24.0.0",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.3.3333"
-  }
+    "name": "another-form-validator",
+    "version": "0.1.5",
+    "description": "A framework agnostic, customizable form validator",
+    "repository": "https://github.com/adwhitaker/another-form-validator",
+    "main": "dist/index.js",
+    "files": [
+        "dist/*",
+        "src/*",
+        "*.json",
+        "*.ts",
+        "*.js"
+    ],
+    "scripts": {
+        "compile": "tsc",
+        "test": "jest"
+    },
+    "author": "Alexander Whitaker",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/jest": "^24.0.11",
+        "jest": "^24.5.0",
+        "ts-jest": "^24.0.0",
+        "ts-loader": "^5.3.3",
+        "typescript": "^3.3.3333"
+    }
 }

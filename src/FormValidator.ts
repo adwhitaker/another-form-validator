@@ -30,7 +30,7 @@ export interface FieldRegister {
 
 type FieldObject = { [key: string]: Field }
 
-export default class Forum {
+export default class FormValidator {
 
     private fields: FieldObject = {}
 
